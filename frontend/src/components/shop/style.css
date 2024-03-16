@@ -84,13 +84,13 @@ aside {
 @media only screen and (max-width: 1008px) {
   .shop-page .aside-bar-cont {
     width: 30%;
-  }.shop-page .product-containor .card-col {
+  }
+  .shop-page .product-containor .card-col {
     width: 31.5% !important;
   }
   .shop-page .product-containor {
     width: 70%;
   }
-
 }
 @media only screen and (max-width: 900px) {
   .shop-page .product-containor {
@@ -147,7 +147,6 @@ aside {
   }
 }
 
-
 .shop-page .aside-bar-cont {
   width: 25%;
 }
@@ -175,6 +174,6 @@ aside {
 }
 @media only screen and (max-width: 499px) {
   .shop-page .product-containor .card-col {
-    width: 47%;
+    width: 47.111% !important;
   }
 }

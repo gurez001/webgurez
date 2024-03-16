@@ -17,6 +17,14 @@
   display: flex;
   gap: 20px;
   align-items: center;
+  font-size: 15px !important;
+  width: 100%;
+}
+.MuiCollapse-wrapperInner a{
+  font-size: 14px !important;
+}
+.MuiTreeItem-label{
+  padding: 0px !important;
 }
 .dashboard-sidebar aside p {
   margin: 5px 0;
