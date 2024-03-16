@@ -14,7 +14,8 @@
 .foot-col h4{
   font-size: 20px !important;
 }
-.foot-col p,li{
+.foot-col p,
+.foot-col li{
   margin-bottom: 10px !important;
 }
 .foot {
