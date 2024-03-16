@@ -11,6 +11,12 @@
   flex-basis: 25%;
  
 }
+.foot-col h4{
+  font-size: 20px !important;
+}
+.foot-col p,li{
+  margin-bottom: 10px !important;
+}
 .foot {
   width: 25%;
 }
@@ -88,10 +94,13 @@ font-size: 18px;
 .footer-newsletter{
   width: 45%;
 }
-
-.footer-newaletter-form input{
-  width: 100%;
+#news-email{
+  width: 100% !important;
 }
+
+/* .footer-newaletter-form input{
+  width: 100%;
+} */
 @media only screen and (max-width: 767px) {
   .foot-col {
     flex-direction: column;

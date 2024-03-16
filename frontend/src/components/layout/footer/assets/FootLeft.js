@@ -14,17 +14,17 @@ export const FootLeft = () => {
           </div>
           <div className="contacts">
             <p><strong>Email:</strong> <br/>
-            <NavLink to={"/"}>shop@winkycoo.com</NavLink></p>
+            <NavLink to={"/"}>ecom@gurez.com</NavLink></p>
             <p>
               <strong>Working Hour:</strong><br/>
-              Monday - Friday
+              Monday - Sunday
               <br />
               10:00 AM to 7:00 PM
             </p>
             <p>
              <strong> Our Store Address:</strong>
               <br />
-              #12, Second Floor, Khera Enclave, Sector 126, Kharar (Pb) - 140301
+              Near Church, Anand Vihar Colony, Karnal, Haryana 132001
             </p>
             
           </div>

@@ -15,6 +15,9 @@ export const FootRight = () => {
               <NavLink to={"/account"}>My Account</NavLink>
             </li>
             <li>
+              <NavLink to={"/user-dashboard"}>Dashboard</NavLink>
+            </li>
+            <li>
               <NavLink to={"/shop"}>Shop</NavLink>
             </li>
             <li>
