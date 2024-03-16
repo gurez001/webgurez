@@ -302,11 +302,11 @@ export const CreateProduct = () => {
       alert.error(error);
       dispatch(ClearError());
     }
-    // if (success) {
-    //   dispatch({ type: NEW_PRODUCT_RESET });
-    //   alert.success("product created");
-    //   Navigate("/admin/all-products");
-    // }
+    if (success) {
+      alert.success("product created");
+      Navigate("/admin/all-products");
+      dispatch({ type: NEW_PRODUCT_RESET });
+    }
     // if (name) {
     //   setSeoInputValue((prev) => ({ ...prev, seotitle: name }));
     // }
@@ -362,7 +362,7 @@ export const CreateProduct = () => {
                         <Button onClick={createProduct}>addd</Button>
                       </div>
                       <div className="product-sidebar-containor">
-                        <PublishSection handlePublishBut={handlePublishBut} />
+                        <PublishSection loding={loding} handlePublishBut={handlePublishBut} />
                         <Button
                           variant="outlined"
                           onClick={handleImageClickOpen}

@@ -1,7 +1,7 @@
 import { Button } from "@material-ui/core";
 import React from "react";
 
-const PublishSection = ({handlePublishBut}) => {
+const PublishSection = ({handlePublishBut,loding}) => {
   return (
     <>
       <div className="postbox-container">
@@ -159,7 +159,7 @@ const PublishSection = ({handlePublishBut}) => {
           </div> */}
 
           <div className="publish-bnt">
-            <Button onClick={()=>handlePublishBut()} >Publish</Button>
+            <Button disabled={loding?true:false} onClick={()=>handlePublishBut()} >Publish</Button>
           </div>
         </div>
       </div>

@@ -56,8 +56,8 @@ console.log()
         <h2>Comments</h2>
         {data.length > 0 ? (
           data && data.map((item, i) =>
-            item.blogId === blogId ? (<p key={i}>{item.comment} 
-            <span>{item && item.user && item.user.name}</span>
+            item.blogId === blogId ? (<p key={i} className="comment-p">{item.comment} 
+            <span style={{fontWeight:600}}>{item && item.user && item.user.name}</span>
             </p>) : null
           )
         ) : (
@@ -68,8 +68,11 @@ console.log()
     }
 
       <h3>Leave a Comment</h3>
+      <div className="comment-form">
       <form onSubmit={handleSubmit}>
         <textarea
+         rows={4}
+         cols={40}
           placeholder="Your comment"
           name="comment"
           value={inputValue.comment}
@@ -77,6 +80,7 @@ console.log()
         />
         <button type="submit">Add Comment</button>
       </form>
+      </div>
     </>
   );
 };

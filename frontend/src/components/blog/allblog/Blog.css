@@ -115,6 +115,21 @@ height:80px
 margin-bottom:10px
 }
 
+.comment-form form{
+  padding: 20px 0 !important;
+}
+
+.comment-form button{
+  width: auto !important;
+  background: var(--G-green) !important;
+  margin-top: 5px !important;
+}
+.comment-p{
+display: flex;
+flex-direction: column-reverse;
+margin-bottom: 10px !important;
+}
+
 @media screen and (max-width: 767px) {
   .blog-left {
     width: 100%;

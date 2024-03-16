@@ -16,14 +16,14 @@ const latestdata=blog.slice(0,4);
           <img src="https://gurez.com/wp-content/uploads/2023/05/Amazone-tape-3-600x600.webp" />
           <div style={{ display: "block", width: "100%" }}>
             <div>
-              <p>{item.creditAt}</p>
+              <p style={{fontWeight:500}}>{item.creditAt}</p>
             </div>
 
             <div
               className="search-star"
               style={{ display: "flex", justifyContent: "space-between" }}
             >
-              <p>{item.name}</p>
+              <p >{item.name}</p>
             </div>
           </div>
           </div>
