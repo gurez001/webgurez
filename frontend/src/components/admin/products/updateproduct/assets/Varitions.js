@@ -177,7 +177,14 @@ const Varitions = ({
             onChange={(e) => inputValueChangeHandler(e)}
           >
             <option value="no shipping class">No default pack</option>
-            {updatedvaritionsName &&
+         
+            {varitionsName && varitionsName.length>0?(
+               varitionsName &&
+               varitionsName.map((item, i) => (
+                  <option value={item}>{item}</option>
+                ))):
+            
+            updatedvaritionsName &&
               updatedvaritionsName.map((item, i) => (
                 <option value={item}>{item}</option>
               ))}
