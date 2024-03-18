@@ -10,6 +10,7 @@ const {
   deleteOrders,
   shipping_info,
   order_details_info,
+  getAdminSingleOrder,
 } = require("../controllers/orederController");
 
 router.route("/order/new").post(isAuthenticatedUser, createOrder);
@@ -23,6 +24,7 @@ router
   .put(isAuthenticatedUser, authorizeRols("admin"), updateOrder);
 router
   .route("/admin/order/:id")
+  .get(isAuthenticatedUser, authorizeRols("admin"), getAdminSingleOrder)
   .delete(isAuthenticatedUser, authorizeRols("admin"), deleteOrders);
 
 

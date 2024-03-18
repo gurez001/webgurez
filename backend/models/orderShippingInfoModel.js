@@ -41,7 +41,11 @@ const shippingInfoSchema = new mongoose.Schema({
   order_info_uuid:{
     type: String,
     ref: "order",
-  }
+  },
+  user: {
+    type: Number,
+    ref: "User",
+  },
 });
 
 module.exports = mongoose.model("shipping_Info", shippingInfoSchema);

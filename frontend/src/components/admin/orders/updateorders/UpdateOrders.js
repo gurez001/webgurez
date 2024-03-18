@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Loader from "../../../layout/loader/Loader";
 import {
   clearErrors,
+  getAdminOrderDetails,
   getMyorders,
   getOrderDetails,
   order_details_info,
@@ -92,7 +93,7 @@ export const UpdateOrders = () => {
   };
 
   useMemo(() => {
-    dispatch(getOrderDetails(id));
+    dispatch(getAdminOrderDetails(id));
   }, []);
 
   useEffect(() => {

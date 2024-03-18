@@ -59,6 +59,7 @@ exports.createOrder = catchAsyncError(async (req, res, next) => {
     city: shippinginfo.city,
     pinCode: shippinginfo.pinCode,
     order_info_uuid: Order.order_info_uuid,
+    user: req.user._id,
   });
   // // const orderConfermation = {
   // //   shippingInfo: shippinginfo,
@@ -68,10 +69,10 @@ exports.createOrder = catchAsyncError(async (req, res, next) => {
 
   // // sendOrderEmail(orderConfermation);
   // //   order details
-  const product_uuid = [];
-  const product_id = [];
-  let product_Total_Price = 0;
-  let product_Total_Quantity = 0;
+  // const product_uuid = [];
+  // const product_id = [];
+  // let product_Total_Price = 0;
+  // let product_Total_Quantity = 0;
 
   // orderItem &&
   //   orderItem.forEach((item, i) => {
@@ -80,7 +81,7 @@ exports.createOrder = catchAsyncError(async (req, res, next) => {
   //     product_Total_Price += item.price * item.quantity;
   //     product_Total_Quantity += item.quantity;
   //   });
-  
+
   for (let i = 0; i < orderItem.length; i++) {
     const order_Details_length = await orderDetailsMode.countDocuments();
     const orderDetails = await orderDetailsMode.create({
@@ -93,6 +94,7 @@ exports.createOrder = catchAsyncError(async (req, res, next) => {
       order_info_detail_price: orderItem[i].price,
       order_detail_quantity: orderItem[i].quantity,
       order_detail_created_date: Order.order_info_created_date,
+      user: req.user._id,
     });
   }
 
@@ -116,6 +118,31 @@ exports.createOrder = catchAsyncError(async (req, res, next) => {
 
 // get single order
 exports.getSingleOrder = catchAsyncError(async (req, res, next) => {
+  const Order = await order.findById(req.params.id).populate([
+    { path: "user", model: "User" },
+    // {path:'master_coupon_uuid',model:'masterCoupon'}
+  ]);
+  const user = Order.user._id;
+  const all_order = await order.find();
+
+  const all_user_orders = all_order.filter((item) => item.user === user);
+  const Total_orders = all_user_orders.length;
+  const Total_revenue = all_user_orders.reduce((acc, order) => {
+    return acc + order.order_info_total_price;
+  }, 0);
+
+  if (!Order) {
+    return next(new ErrorHandler("order not found with this is", 404));
+  }
+  res.status(201).json({
+    success: true,
+    Order,
+    Total_orders,
+    Total_revenue,
+  });
+});
+
+exports.getAdminSingleOrder = catchAsyncError(async (req, res, next) => {
   const Order = await order.findById(req.params.id).populate([
     { path: "user", model: "User" },
     // {path:'master_coupon_uuid',model:'masterCoupon'}
@@ -202,7 +229,7 @@ exports.updateOrder = catchAsyncError(async (req, res, next) => {
   if (!Order) {
     return next(new ErrorHandler("Order not found", 404));
   }
- 
+
   // if (Order.order_info_status === "Delivered") {
   //   return next(new ErrorHandler("We have already Delivered this order", 404));
   //   // Order.deliveredAt = Date.now();
@@ -339,9 +366,12 @@ exports.deleteOrders = catchAsyncError(async (req, res, next) => {
 
 exports.shipping_info = catchAsyncError(async (req, res, next) => {
   const { id } = req.params;
-  const shipping = await orderShippingInfoModel.findOne({
-    order_info_uuid: id,
-  });
+  const user = req.user._id;
+  let shipping =
+    id === "0"
+      ? await orderShippingInfoModel.findOne({ user })
+      : await orderShippingInfoModel.findOne({ order_info_uuid: id });
+
   res.status(201).json({
     success: true,
     shipping,
@@ -350,7 +380,7 @@ exports.shipping_info = catchAsyncError(async (req, res, next) => {
 
 exports.order_details_info = catchAsyncError(async (req, res, next) => {
   const { id } = req.params;
-  
+
   const order_details = await orderDetailsMode
     .find({
       order_detail_uuid: id,

@@ -39,7 +39,7 @@ const Ordershandle=()=>{
 
 
   React.useMemo(() => {
-    dispatch(getOrderDetails(315));
+    dispatch(order_shipping_info(0));
   }, []);
 
   React.useEffect(() => {
@@ -48,9 +48,9 @@ const Ordershandle=()=>{
       // dispatch(clearErrors());
     }
 
-    dispatch(order_shipping_info(orders && orders.order_info_uuid));
+    // dispatch(order_shipping_info(orders && orders.order_info_uuid));
 
-    dispatch(get_payment_info(orders && orders.order_info_uuid));
+    // dispatch(get_payment_info(orders && orders.order_info_uuid));
   }, [dispatch, error, alert, id, orders]);
 
 
