@@ -28,7 +28,7 @@ const LoginSingup = () => {
     }
 
     if (isAuthenticated) {
-      Navigate("/account");
+      Navigate("/user-dashboard");
     }
     if (success) {
       alert.success(message);

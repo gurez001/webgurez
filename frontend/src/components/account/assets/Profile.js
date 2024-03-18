@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 import Loader from "../../layout/loader/Loader";
 import { useSelector } from "react-redux";
+import TimeAndDate from "../../layout/time/TimeAndDate";
 
 export const Profile = () => {
   const { user, loading } = useSelector((state) => state.user);
@@ -12,7 +13,7 @@ export const Profile = () => {
         <>
           <div id="profile-page" className="profile-containor">
             <div className="prof-cont-row">
-              <div className="user-profile-area">
+              <div style={{marginTop:10}} className="user-profile-area col-md-4">
                 <div className="user-prf-e">
                   <div className="profile-img">
                     <img
@@ -29,24 +30,22 @@ export const Profile = () => {
                   </p>
                 </div>
               </div>
-              <div className="ot-det">
+              <div style={{marginTop:10}} className="ot-det col-md-8">
                 <div className="userDetails">
-                  <p>
-                    <b>Name </b>
+                  <p >
+                    <b>Name</b> <br/>
                     <span>{user.name}</span>
                   </p>
                   <p>
-                    <b>Email </b>
+                    <b>Email </b> <br/>
                     <span>{user.email}</span>
                   </p>
                   <p>
-                    <b>Joinig Date </b>
-                    <span> {String(user.date).substr(0, 10)}</span>
+                    <b>Joinig Date </b> <br/>
+                    <span> <TimeAndDate time={user && user.date} /> </span>
                   </p>
                 </div>
-                <p>
-                  <NavLink to={"/order/me"}>My orders</NavLink>
-                </p>
+
                 <p>
                   <NavLink to={"/account/password/update"}>
                     Password update

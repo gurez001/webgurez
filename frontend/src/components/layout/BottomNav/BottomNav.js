@@ -86,7 +86,7 @@ function BottomNav() {
             </span>
           ))}
 
-          <RxHamburgerMenu onClick={toggleContentadd} />
+          {/* <RxHamburgerMenu onClick={toggleContentadd} /> */}
         </div>
         {windowWidth < 767 && (
           <MobNav

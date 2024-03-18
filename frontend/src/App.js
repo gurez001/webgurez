@@ -14,7 +14,6 @@ import LoginSingup from "./components/user/LoginSingup";
 import { useEffect, useState } from "react";
 import store from "./store"; 
 import { LoadUser } from "./actions/UserAction";
-import { Account } from "./components/account/Account";
 import Loader from "./components/layout/loader/Loader";
 import { useSelector } from "react-redux";
 import { ProtectedRoute } from "./components/route/ProtectedRoute";
@@ -158,10 +157,7 @@ function App() {
                 />
                 <Route path="/registration" element={<LoginSingup />} />
                 {/* <Route path="/category/:id" element={<Dolls />} /> */}
-                <Route
-                  path="/account"
-                  element={<ProtectedRoute Component={Account} />}
-                />
+            
                 <Route
                   path="/account/me/update"
                   element={<ProtectedRoute Component={UpdateProfile} />}

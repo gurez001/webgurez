@@ -54,7 +54,7 @@ export const UpdateProfile = () => {
     if (isUpdated) {
       alert.success("Profile Updated successfully");
       dispatch(LoadUser());
-      Navigate("/account");
+      Navigate("/user-dashboard");
       dispatch({
         type: UPDATE_PROFILE_RESET,
       });

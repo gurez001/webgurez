@@ -129,6 +129,8 @@ aside {
   .mob-filter p {
     display: inline;
     cursor: pointer;
+    border:1px solid var(--G-green);
+    padding: 4px 15px;
   }
   .mob-filter svg {
     font-size: 14px;
@@ -146,7 +148,11 @@ aside {
     z-index: 50;
   }
 }
-
+@media screen and (max-width:768px) {
+  .shop-page .aside-bar-cont {
+    width: 100% !important;
+  }
+}
 .shop-page .aside-bar-cont {
   width: 25%;
 }

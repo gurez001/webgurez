@@ -36,7 +36,7 @@ const PasswordUpdate = () => {
     }
     if (isUpdated) {
       alert.success("Password Updated Successfully");
-      Navigate("/account");
+      Navigate("/user-dashboard");
       dispatch({
         type: UPDATE_PASSWORD_RESET,
       });
