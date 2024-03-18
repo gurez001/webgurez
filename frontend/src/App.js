@@ -12,7 +12,7 @@ import Shop from "./components/shop/Shop";
 import ProductDetails from "./components/productDetails/ProductDetails";
 import LoginSingup from "./components/user/LoginSingup";
 import { useEffect, useState } from "react";
-import store from "./store";
+import store from "./store"; 
 import { LoadUser } from "./actions/UserAction";
 import { Account } from "./components/account/Account";
 import Loader from "./components/layout/loader/Loader";
