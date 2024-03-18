@@ -90,7 +90,7 @@ export const myOredersReducer = (state = { orders: [] }, action) => {
 };
 
 export const orderDetailsReducer = (
-  state = { orders: {}, shiping_info: {}, order_details_info: {} }, // Initial state
+  state = { orders: {}, shiping_info: {}, order_details_info: [] }, // Initial state
   action // Action dispatched
 ) => {
   switch (action.type) {

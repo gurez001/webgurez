@@ -20,15 +20,15 @@ export const OrderDetails = () => {
   const alert = useAlert();
   const { id } = useParams();
   const dispatch = useDispatch();
-  const { loading, orders, shiping_info, order_details, error } = useSelector(
-    (state) => state.orderDetails
-  );
+  const {
+    loading,
+    orders,
+    shiping_info,
+    order_details_info: order_details,
+    error,
+  } = useSelector((state) => state.orderDetails);
   const { payment_info } = useSelector((state) => state.payment);
-  console.log(orders);
 
-  let { shippingInfo, paymentInfo } = orders ? orders : {};
-
-  const orderItem = order_details && order_details.product_Items;
 
   useMemo(() => {
     dispatch(getOrderDetails(id));
@@ -70,11 +70,6 @@ export const OrderDetails = () => {
                   </p>
                 </div>
 
-                <h2>
-                  <NavLink to={`/order/${orders && orders._id}/123`}>
-                    123{" "}
-                  </NavLink>
-                </h2>
                 <div className="order-containor">
                   <div className="order-header">
                     <ul className="overview-ul">
@@ -113,27 +108,31 @@ export const OrderDetails = () => {
                     <h2>ORDER DETAILS</h2>
                     <div className="order-li">
                       <h2>Products</h2>
-                      {orderItem &&
-                        orderItem.map((item, i) => {
+
+                      {order_details &&
+                        order_details.map((item, i) => {
                           return (
                             <div key={i} className="order-item">
                               <div className="order-li-item-price">
-                                <p>
+                                <p style={{ color: "#3d3d3d" }}>
                                   <strong>
-                                    {item.name}
+                                    {item &&
+                                      item.product_Item &&
+                                      item.product_Item.product_name}
                                     <br></br>
                                     <b style={{ fontWeight: 400 }}>
-                                      {item.label}
+                                      {item.product_label}
                                     </b>
                                   </strong>
-                                  <span>{item.price}</span>
+                                  <span>{item.order_info_detail_price}</span>
                                 </p>
                               </div>
                               <div className="order-li-item-price">
                                 <p>
                                   <strong>Quantity:</strong>
                                   <span>
-                                    {item.price}x{item.quantity}
+                                    {item.order_info_detail_price}x
+                                    {item.order_detail_quantity}
                                   </span>
                                 </p>
                               </div>
@@ -159,6 +158,7 @@ export const OrderDetails = () => {
                       <div className="order-li-item-price">
                         <p>
                           <strong>Payment method:</strong>
+
                           <span>
                             {orders.order_info_mode && orders.order_info_mode}
                           </span>
@@ -242,7 +242,7 @@ export const OrderDetails = () => {
                       <div className="pay-mod-details">
                         {payment_info && payment_info ? (
                           <>
-                           <div className="order-item">
+                            <div className="order-item">
                               <div className="order-li-item-price">
                                 <p>
                                   <strong>Mode</strong>
@@ -253,24 +253,24 @@ export const OrderDetails = () => {
                                 <p>
                                   <strong>Payment Id</strong>
                                   <span>
-                                {payment_info &&
-                                  payment_info.paynent_response &&
-                                  payment_info.paynent_response[0].id}
-                              </span>
+                                    {payment_info &&
+                                      payment_info.paynent_response &&
+                                      payment_info.paynent_response[0].id}
+                                  </span>
                                 </p>
                               </div>
                               <div className="order-li-item-price">
                                 <p>
                                   <strong>Payment status</strong>
-                                  <span>{payment_info.payment_info_status}</span>
+                                  <span>
+                                    {payment_info.payment_info_status}
+                                  </span>
                                 </p>
                               </div>
-                              </div>
-                          
-                          
+                            </div>
                           </>
                         ) : (
-                          <p>Ooops.. Data not found</p>
+                          <p>Cash on delivery</p>
                         )}
                       </div>
                     </div>

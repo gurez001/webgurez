@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import Currency from "../../../../layout/currency/Currency";
-import {client_url} from "../../../../../utils/Url";
+import { client_url } from "../../../../../utils/Url";
 import { CiDeliveryTruck } from "react-icons/ci";
 import { Button } from "@material-ui/core";
 
@@ -10,6 +10,8 @@ const OrderProductList = () => {
   const { loading, order_details_info, orders, error } = useSelector(
     (state) => state.orderDetails
   );
+
+  let sub_Total = 0;
 
   return (
     <>
@@ -27,44 +29,54 @@ const OrderProductList = () => {
           <div className="col-md-2">
             <p className="xsm-font-size">Total</p>
           </div>
+          {console.log(order_details_info)}
         </div>
         {order_details_info &&
-          order_details_info.product_Items &&
-          order_details_info.product_Items.map((item, i) => (
-            <div className="postbox-inner row" key={i}>
-              <div className="col-md-8 row">
-                <div className="thumb col-md-2">
-                  <img src={`${client_url()}/${item.path}`} alt="d" />
+          order_details_info.map((item, i) => {
+            sub_Total +=
+              item.order_info_detail_price * item.order_detail_quantity;
+            return (
+              <div className="postbox-inner row" key={i}>
+                <div className="col-md-8 row">
+                  {/* <div className="thumb col-md-2">
+                    <img src={`${client_url()}/${item.path}`} alt="d" />
+                  </div> */}
+                  <div style={{ padding: "5px" }} className="product-col-md-10">
+                    <NavLink
+                      className="xsm-font-size"
+                      to={`/product/${item &&
+                        item.product_Item &&
+                        item.product_Item.slug}`}
+                    >
+                      {item &&
+                        item.product_Item &&
+                        item.product_Item.product_name}
+                    </NavLink>
+                  </div>
                 </div>
-                <div
-                  style={{ padding: "5px" }}
-                  className="product-col-md-10"
-                >
-                  <NavLink
-                    className="xsm-font-size"
-                    to={`/product/${item.link}`}
-                  >
-                    {item.name}
-                  </NavLink>
-                </div>
-              </div>
-              <div className="col-md-2">
-                <bdi>
-                  <Currency price={item.price} />
-                </bdi>
-              </div>
-              <div className="col-md-2">
-                <p>{item.quantity}</p>
-              </div>
-              <div className="col-md-2">
-                <bdi>
+                <div className="col-md-2">
                   <bdi>
-                    <Currency price={item.price * item.quantity} />
+                    <Currency price={item.order_info_detail_price} />
                   </bdi>
-                </bdi>
+                </div>
+                <div className="col-md-2">
+                  <p>{item.order_detail_quantity}</p>
+                </div>
+                <div className="col-md-2">
+                  <bdi>
+                    <bdi>
+                      <Currency
+                        price={
+                          item.order_info_detail_price *
+                          item.order_detail_quantity
+                        }
+                      />
+                    </bdi>
+                  </bdi>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         <div className="postbox-inner row">
           <div className="col-md-3 row ">
             <div className="thumb col-md-4">
@@ -119,12 +131,7 @@ const OrderProductList = () => {
               <div className="col-md-6">
                 <p className="xsm-font-size">
                   {" "}
-                  <Currency
-                    price={
-                      order_details_info &&
-                      order_details_info.order_info_detail_price
-                    }
-                  />
+                  <Currency price={sub_Total} />
                 </p>
               </div>
             </div>
@@ -175,8 +182,7 @@ const OrderProductList = () => {
                 <p className="xsm-font-size">
                   <Currency
                     price={Math.abs(
-                      (order_details_info &&
-                        order_details_info.order_info_detail_price) +
+                      (sub_Total) +
                         (orders && orders.order_info_shipping_charges) +
                         (orders && orders.order_info_gst) -
                         (orders && orders.order_info_total_coupon_discount)
@@ -194,13 +200,12 @@ const OrderProductList = () => {
               </div>
               <div className="col-md-6">
                 <p className="xsm-font-size">
-                  {" "}
+            
                   <Currency
                     price={Math.abs(
-                      (order_details_info &&
-                        order_details_info.order_info_detail_price) +
+                      (sub_Total) +
                         (orders && orders.order_info_shipping_charges) +
-                        (orders && orders.order_info_gst)-
+                        (orders && orders.order_info_gst) -
                         (orders && orders.order_info_total_coupon_discount)
                     )}
                   />

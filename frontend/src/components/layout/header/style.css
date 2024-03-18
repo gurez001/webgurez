@@ -54,6 +54,9 @@ header {
   justify-content: space-between;
   align-items: center;
 }
+.nav-list a{
+  color: #fff;
+}
 .product-navigation svg {
   font-size: 16px !important;
 }
@@ -183,9 +186,10 @@ header {
 .hab-remove svg {
   cursor: pointer;
   font-size: 28px;
-  position: absolute;
+  /* position: absolute;
   right: 8px;
-  top: 25px;
+  top: 25px; */
+  background: white;
 }
 .ham-show-toggle {
   cursor: pointer;
@@ -285,9 +289,9 @@ header {
   }
   .mob-call {
     padding: 20px 15px;
-    width: 85%;
+    width: 100%;
     height: 100%;
-    background: #f7f7f7;
+    background:#222529;
     border-radius: 0 15px 0 20px;
   }
 
@@ -318,7 +322,8 @@ header {
   padding: 10px;
 }
 .mob-call .search-row svg {
-  position: unset;
+  /* position: unset; */
+  position: relative !important;
 }
 .mob-call .mob-list {
   display: flex;
@@ -334,6 +339,7 @@ header {
   display: flex;
   width: 30%;
   justify-content: end;
+
 }
 .mob-call .child-navlist {
   margin: 05px 0;
@@ -343,6 +349,7 @@ header {
 .mob-call li svg {
   font-size: 18px;
   opacity: 0.6;
+    color: #fff;
 }
 .hamb svg {
   font-size: 20px;
@@ -460,7 +467,21 @@ header {
     right: 0px;
     width: 60px;
   }
+  .search-icon-div{
+    background: var(--G-green);
+    width: 40px;
+    height: 40px;
+  }
+  .search-row svg{
+    color: white;
+  }
+  .mob-call .search-area{
+    max-width: 100%;
+    margin: 20px 0;
+  }
 }
+
+
 
 /* Navlink pag */
 .parent-navlist li {
@@ -474,6 +495,13 @@ header {
   display: none;
   background: white;
   width: 200px;
+}
+.child-navlist li{
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+.child-navlist li a{
+  color: #000;
 }
 
 .mob-list svg {

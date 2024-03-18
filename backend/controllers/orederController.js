@@ -73,25 +73,40 @@ exports.createOrder = catchAsyncError(async (req, res, next) => {
   let product_Total_Price = 0;
   let product_Total_Quantity = 0;
 
-  orderItem &&
-    orderItem.forEach((item, i) => {
-      product_uuid.push(item.product_uuid);
-      product_id.push(item.productId);
-      product_Total_Price += item.price * item.quantity;
-      product_Total_Quantity += item.quantity;
+  // orderItem &&
+  //   orderItem.forEach((item, i) => {
+  //     product_uuid.push(item.product_uuid);
+  //     product_id.push(item.productId);
+  //     product_Total_Price += item.price * item.quantity;
+  //     product_Total_Quantity += item.quantity;
+  //   });
+  
+  for (let i = 0; i < orderItem.length; i++) {
+    const order_Details_length = await orderDetailsMode.countDocuments();
+    const orderDetails = await orderDetailsMode.create({
+      order_detail_uuid: Order.order_info_uuid,
+      order_detail_id: order_Details_length + 1,
+      order_info_uuid: Order.order_info_uuid + i,
+      product_Item: orderItem[i].productId,
+      product_label: orderItem[i].label,
+      product_uuid: orderItem[i].product_uuid,
+      order_info_detail_price: orderItem[i].price,
+      order_detail_quantity: orderItem[i].quantity,
+      order_detail_created_date: Order.order_info_created_date,
     });
+  }
 
-  const order_Details_length = await orderDetailsMode.countDocuments();
-  const orderDetails = await orderDetailsMode.create({
-    order_detail_id: order_Details_length + 1,
-    order_info_uuid: uuid,
-    product_Items: orderItem,
-    product_id: product_id,
-    product_uuid: product_uuid,
-    order_info_detail_price: product_Total_Price,
-    order_detail_quantity: product_Total_Quantity,
-    order_detail_created_date: Order.order_info_created_date,
-  });
+  // const order_Details_length = await orderDetailsMode.countDocuments();
+  // const orderDetails = await orderDetailsMode.create({
+  //   order_detail_id: order_Details_length + 1,
+  //   order_info_uuid: uuid,
+  //   product_Items: orderItem,
+  //   product_id: product_id,
+  //   product_uuid: product_uuid,
+  //   order_info_detail_price: product_Total_Price,
+  //   order_detail_quantity: product_Total_Quantity,
+  //   order_detail_created_date: Order.order_info_created_date,
+  // });
 
   res.status(201).json({
     success: true,
@@ -187,7 +202,7 @@ exports.updateOrder = catchAsyncError(async (req, res, next) => {
   if (!Order) {
     return next(new ErrorHandler("Order not found", 404));
   }
-  console.log(req);
+ 
   // if (Order.order_info_status === "Delivered") {
   //   return next(new ErrorHandler("We have already Delivered this order", 404));
   //   // Order.deliveredAt = Date.now();
@@ -335,11 +350,12 @@ exports.shipping_info = catchAsyncError(async (req, res, next) => {
 
 exports.order_details_info = catchAsyncError(async (req, res, next) => {
   const { id } = req.params;
+  
   const order_details = await orderDetailsMode
-    .findOne({
-      order_info_uuid: id,
+    .find({
+      order_detail_uuid: id,
     })
-    .populate({ path: "product_id", model: "Product" });
+    .populate({ path: "product_Item", model: "Product" });
   res.status(200).json({
     success: true,
     order_details,

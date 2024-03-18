@@ -69,8 +69,8 @@ const ProccessPaymentStep = () => {
       shippingPrice: orderInfo.shippingChargs,
       totalPrice: orderInfo.totalPrice,
     };
-
     const totalPrice = orders.totalPrice;
+    console.log(totalPrice)
     const options = {
       key: "rzp_test_qEmBTt5Ssq87mn",
       amount: totalPrice * 100,

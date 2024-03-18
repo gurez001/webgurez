@@ -54,7 +54,10 @@ export const Search = () => {
           value={searchInput.search}
           onChange={searchHandle}
         />
+          <div className="search-icon-div">
+
         <FaSistrix />
+          </div>
       </div>
       <div className="search-product">
         <ul className={InputLength ? "listcont" : ""}>

@@ -4,7 +4,7 @@ import TimeAndDate from "../../layout/time/TimeAndDate";
 import { NavLink } from "react-router-dom";
 import Currency from "../../layout/currency/Currency";
 export const OrderCard = ({ orders }) => {
-  console.log(orders);
+
   return (
     <>
       <div className="order-card-containor">

@@ -255,10 +255,16 @@ font-size: 40px;
   color: #222;
 }
 
-@media screen and (max-width:768px){
+@media screen and (max-width:767px){
   .overview-ul{
     flex-direction: column;
     align-items:normal;
+  }
+  #order-details{
+    padding: 0px;
+  }
+  .order-details{
+    flex-wrap: wrap;
   }
   li.overview-item{
     border-bottom: 1px solid #eee;
