@@ -3,7 +3,7 @@ import React from "react";
 const ShippingDetails = ({ shiping_info }) => {
   return (
     <div className="order-details">
-      <div className="billing-details">
+      {/* <div className="billing-details">
         <h2>Billing Addresss</h2>
         <div className="Billing-details-area">
           {shiping_info && shiping_info ? (
@@ -63,7 +63,7 @@ const ShippingDetails = ({ shiping_info }) => {
             <p>Shipping details not found</p>
           )}
         </div>
-      </div>
+      </div> */}
 
       <div className="pay-mode">
         <h2>Shipping Address</h2>

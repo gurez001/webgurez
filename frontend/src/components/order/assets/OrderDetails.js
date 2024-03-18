@@ -251,7 +251,7 @@ export const OrderDetails = () => {
                               </div>
                               <div className="order-li-item-price">
                                 <p>
-                                  <strong>Payment Id</strong>
+                                  <strong>Transiction Id</strong>
                                   <span>
                                     {payment_info &&
                                       payment_info.paynent_response &&
