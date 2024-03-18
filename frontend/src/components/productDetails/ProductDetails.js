@@ -88,7 +88,7 @@ const ProductDetails = () => {
 
   const wishlist_product_uuid = generateUuid();
   const wishlist_product_id = product && product._id;
-  const productUuid = product && product.product_uuid;
+  const productUuid = product && product.product_meta_uuid;
   const productType = product && product.product_Type;
 
   const addToWishtHandler = () => {

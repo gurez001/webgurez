@@ -180,7 +180,7 @@ console.log(postmeta)
           product.product_subcategory &&
           product.product_subcategory.map((item) => item._id)
       );
-      dispatch(getProductPostMeta(product && product.product_uuid), []);
+      product.product_meta_uuid && dispatch(getProductPostMeta(product && product.product_meta_uuid), []);
      
       
       
@@ -229,6 +229,7 @@ console.log(postmeta)
       const currentImageArray = getCurrentImage();
      
       let VariationData = Variations ? Variations : postmeta && postmeta;
+      console.log(VariationData)
     dispatch(
       updateAdminProduct(
         id,

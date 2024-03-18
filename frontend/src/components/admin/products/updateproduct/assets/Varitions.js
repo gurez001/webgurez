@@ -116,11 +116,11 @@ const Varitions = ({
         matadata.meta_value[i] = [];
       }
 
-      matadata.meta_value[i].push({
+      matadata.meta_value[i] ={
         [nestedValue.name]: [
           { regular_price: numFirstInt, sale_price: numSecondInt },
         ],
-      });
+      };
       varitionsName.push(nestedValue.name);
     });
   });

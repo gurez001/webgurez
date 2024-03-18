@@ -4,7 +4,7 @@ const catchAsyncError = require("../middleware/catchAsyncError");
 
 exports.getPostMetaSingleValue = catchAsyncError(async (req, res, next) => {
   const { id } = req.params;
-  let postMetaValue = await PostMetaModel.findOne({ item_id: id });
+  let postMetaValue = await PostMetaModel.findOne({ meta_uuid: id });
   // if product not found
   // if (!postMetaValue) {
   //   // No products found
