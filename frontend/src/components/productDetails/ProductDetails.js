@@ -47,7 +47,7 @@ const ProductDetails = () => {
     (state) => state.productDetails
   );
   const [showContent, setShowContent] = useState(true);
-  const { success, error: reverror } = useSelector((state) => state.review);
+  const { success, review,error: reverror } = useSelector((state) => state.review);
   let defaultPrice = product && product.product_sale_price;
   const [variantPriceValue, setVariantPriceValue] = useState([]);
   // //--------------- useSelector ----------------------------
@@ -75,7 +75,6 @@ const ProductDetails = () => {
 
   //---add to cart item
   const addToCartHandler = () => {
-   
     dispatch(
       addItemsToCart(
         id,
@@ -151,11 +150,10 @@ const ProductDetails = () => {
 
   useMemo(() => {
     dispatch(getProductDetails(id));
-    dispatch(get_product_review_action(productUuid));
+
     if (productType === "Variable product") {
       dispatch(getProductPostMeta(productUuid));
     }
-
   }, [dispatch, id, productUuid && productUuid, productType && productType]);
 
   useEffect(() => {
@@ -173,7 +171,10 @@ const ProductDetails = () => {
       dispatch({ type: NEW_REVIEW_RESET });
     }
 
-  }, [dispatch, error, alert, success, reverror]);
+    if (product && product) {
+      dispatch(get_product_review_action(product && product.product_uuid));
+    }
+  }, [dispatch, error, alert, success, reverror, product]);
 
   return (
     <>
@@ -284,20 +285,17 @@ const ProductDetails = () => {
                     <ReviewStar product={product} />
 
                     <div className="rev-col">
-                      {product &&
-                      product.reviewsids &&
-                      product.reviewsids.length > 0 ? (
+                      {review.length > 0 ? (
                         <>
                           <div className="review-row">
-                            {product.reviewsids.map((review, i) => {
+                            {review &&  review.map((item, i) => {
                               return (
                                 <ReviewCard
                                   key={i}
-                                  review={review}
+                                  review={item}
                                   length={
-                                    product &&
-                                    product.reviewsids &&
-                                    product.reviewsids.length
+                                    review &&
+                                    review.length
                                   }
                                 />
                               );

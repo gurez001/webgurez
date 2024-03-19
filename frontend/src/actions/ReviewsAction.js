@@ -65,11 +65,14 @@ export const getAllProductReview = () => async (dispatch) => {
 };
 
 export const get_product_review_action = (id) => async (dispatch) => {
-  console.log(id)
+  
   try {
     dispatch({ type: PRODUCT_REVIEW_REQUEST });
 
     const { data } = await axios.get(`/api/v1/review/product-review/${id}`);
+    console.log(id)
+    console.log('call')
+    console.log(data)
     dispatch({
       type: PRODUCT_REVIEW_SUCCESS,
       payload: data.review,

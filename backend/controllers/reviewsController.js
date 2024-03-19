@@ -93,10 +93,11 @@ exports.getAllReviews = catchAsyncError(async (req, res, next) => {
 
 exports.get_product_review = catchAsyncError(async (req, res, next) => {
   const { id } = req.params;
-  console.log(id);
+console.log(id)
   const review = await reviewsSchema
-    .find({ product_uuid: id })
+    .find({product_uuid:id})
     .populate([{ path: "user", model: "User" }]);
+    console.log(review);
   res.status(200).json({
     success: true,
     review,
