@@ -44,7 +44,7 @@ const masterCouponSchema = new mongoose.Schema({
   },
   master_coupon_end_date: {
     type: Date,
-    default:null
+    default: null,
   },
   master_coupon_day_start_time: {
     type: Date,
@@ -63,7 +63,7 @@ const masterCouponSchema = new mongoose.Schema({
     type: Number,
   },
   master_coupon_products: {
-    type:Array,
+    type: Array,
   },
 
   // master_coupon_exclude_Products: [
@@ -98,23 +98,24 @@ const masterCouponSchema = new mongoose.Schema({
   ],
   master_coupon_total_usage_limit: {
     type: Number,
+    default: null,
   },
 
-  master_coupon_total_userwise_limit: [
-    {
-      type: Number,
-      ref: "User",
-    },
-  ],
+  master_coupon_total_userwise_limit: {
+    type: Number,
+    default: null,
+  },
   show_in_listing: {
     type: Boolean,
     default: true,
   },
   master_coupon_image: {
     type: String,
+    default: null,
   },
   master_coupon_tnc: {
     type: String,
+    default: null,
   },
   buy_x_get_y_drink: {
     type: Boolean,
@@ -122,17 +123,19 @@ const masterCouponSchema = new mongoose.Schema({
   },
   master_coupon_created_date: {
     type: Date,
+    default: null,
   },
   master_coupon_modifed_date: {
     type: Date,
+    default: null,
   },
   master_coupon_status: {
-    type: Boolean,
-    default: true,
+    type: String,
+    default: "Active",
   },
   master_coupon_is_deleted: {
-    type: Boolean,
-    default: false,
+    type: String,
+    default: "No",
   },
   user: {
     type: Number,

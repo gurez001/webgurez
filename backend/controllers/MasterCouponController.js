@@ -48,13 +48,13 @@ exports.createCouponMaster = catchAsyncError(async (req, res, next) => {
     master_coupon_categories: productCategories || [],
     // master_coupon_exclude_Categories: excludeCategories || [],
     master_coupon_total_usage_limit: usageLimitPerCoupon,
-    master_coupon_total_userwise_limit: usageLimitPerUser || [],
+    master_coupon_total_userwise_limit: usageLimitPerUser,
     master_coupon_created_date: new Date(), // Use Date object for the current date and time
     master_coupon_modifed_date: new Date(), // Use Date object for the current date and time
     master_coupon_individualUseOnly: individualUseOnly,
     user,
   });
-  console.log(newMasterCoupon);
+
   res.status(201).json({
     success: true,
     message: "Coupon added successfully",
@@ -76,7 +76,7 @@ exports.getAllMasterCoupon = catchAsyncError(async (req, res, next) => {
 exports.verifyMasterCoupon = catchAsyncError(async (req, res, next) => {
   const { coupon, ids, subtotal } = req.body;
   const amount = Number(subtotal);
-
+  const user = req.user._id;
   let data;
   const couponData = await MasrterCouponModel.findOne({
     master_coupon_code: coupon,
@@ -86,6 +86,18 @@ exports.verifyMasterCoupon = catchAsyncError(async (req, res, next) => {
     data = null;
     return next(new ErrorHandler("Invalid coupon.", 404));
   }
+  if (couponData.master_coupon_total_usage_limit !== 0) {
+    const valid_user_range = await isWithinUserRange(
+      couponData,
+      orderModels,
+      user
+    );
+
+    if (!valid_user_range) {
+      return next(new ErrorHandler(`has executed`, 404));
+    }
+  }
+
   if (
     couponData.master_coupon_min_spend !== 0 &&
     couponData.master_coupon_max_spend !== 0
@@ -100,7 +112,10 @@ exports.verifyMasterCoupon = catchAsyncError(async (req, res, next) => {
       );
     }
   } else {
-    if (couponData.master_coupon_min_spend === 0) {
+    if (
+      couponData.master_coupon_min_spend > 1 &&
+      couponData.master_coupon_min_spend < 2
+    ) {
       const valid_max_amount = isMaxAmount(couponData, amount);
       if (!valid_max_amount) {
         return next(
@@ -111,15 +126,16 @@ exports.verifyMasterCoupon = catchAsyncError(async (req, res, next) => {
         );
       }
     }
-
-    const valid_min_amount = isMinMaxAmount(couponData, amount);
-    if (!valid_min_amount) {
-      return next(
-        new ErrorHandler(
-          `Purchase amount should be greater than ${couponData.master_coupon_min_spend}`,
-          404
-        )
-      );
+    if (couponData.master_coupon_min_spend > 1) {
+      const valid_min_amount = isMinMaxAmount(couponData, amount);
+      if (!valid_min_amount) {
+        return next(
+          new ErrorHandler(
+            `Purchase amount should be greater than ${couponData.master_coupon_min_spend}`,
+            404
+          )
+        );
+      }
     }
   }
   const valid_date = isWithinDateRange(couponData);
@@ -140,6 +156,16 @@ exports.verifyMasterCoupon = catchAsyncError(async (req, res, next) => {
   });
 });
 
+async function isWithinUserRange(coupon, orders, user) {
+  const coupon_code = coupon.master_coupon_code;
+  const order = await orders.find({ master_coupon_code: coupon_code, user });
+  const filter_order = order.filter(
+    (item) => item.order_info_status === "Delivered"
+  );
+
+  if (coupon.master_coupon_total_userwise_limit > filter_order.length)
+    return true;
+}
 function isMinMaxAmount(coupon, amount) {
   const max_amount = coupon.master_coupon_max_spend;
   const min_amount = coupon.master_coupon_min_spend;
