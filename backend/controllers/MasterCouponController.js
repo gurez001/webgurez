@@ -86,7 +86,7 @@ exports.verifyMasterCoupon = catchAsyncError(async (req, res, next) => {
     data = null;
     return next(new ErrorHandler("Invalid coupon.", 404));
   }
-  if (couponData.master_coupon_total_usage_limit !== 0) {
+  if (couponData.master_coupon_total_userwise_limit !== 0) {
     const valid_user_range = await isWithinUserRange(
       couponData,
       orderModels,
@@ -94,7 +94,18 @@ exports.verifyMasterCoupon = catchAsyncError(async (req, res, next) => {
     );
 
     if (!valid_user_range) {
-      return next(new ErrorHandler(`has executed`, 404));
+      return next(new ErrorHandler(`Coupon limit has executed`, 404));
+    }
+  }
+
+  if (couponData.master_coupon_total_usage_limit !== 0) {
+    const valid_user_limit_range = await isWithinUsagelimitRange(
+      couponData,
+      orderModels,user
+    );
+
+    if (!valid_user_limit_range) {
+      return next(new ErrorHandler(`Coupon limit has executed`, 404));
     }
   }
 
@@ -155,6 +166,16 @@ exports.verifyMasterCoupon = catchAsyncError(async (req, res, next) => {
     coupon: data,
   });
 });
+
+async function isWithinUsagelimitRange(coupon, orders,user) {
+  const coupon_code = coupon.master_coupon_code;
+  const order = await orders.find({ master_coupon_code: coupon_code, user });
+  const filter_order = order.filter(
+    (item) => item.order_info_status === "Delivered"
+  );
+    console.log(filter_order)
+  if (coupon.master_coupon_total_usage_limit > filter_order.length) return true;
+}
 
 async function isWithinUserRange(coupon, orders, user) {
   const coupon_code = coupon.master_coupon_code;
