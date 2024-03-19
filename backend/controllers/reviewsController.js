@@ -12,7 +12,7 @@ const productModels = require("../models/productModels");
 //--------create new review and update the reviews
 
 exports.createProductReviews = catchAsyncError(async (req, res, next) => {
-  const { rating, comment, productId } = req.body;
+  const { rating, comment, productId, product_uuid, review_uuid } = req.body;
 
   const user = req.user;
   const product = await productModels.findById(productId);
@@ -20,6 +20,8 @@ exports.createProductReviews = catchAsyncError(async (req, res, next) => {
   const reviews = {
     user: user._id,
     rating,
+    product_uuid,
+    review_uuid,
     productid: productId,
     comment,
   };
@@ -38,7 +40,7 @@ exports.createProductReviews = catchAsyncError(async (req, res, next) => {
     }
 
     let revilength = await reviewsSchema.find({
-      productid: productId,
+      product_uuid,
     });
 
     const length = revilength.length;
@@ -58,13 +60,13 @@ exports.createProductReviews = catchAsyncError(async (req, res, next) => {
   await isExistReview.save();
 
   let revilength = await reviewsSchema.find({
-    productid: productId,
+    product_uuid,
   });
   const length = revilength.length;
   const sum = revilength.reduce((acc, review) => acc + review.rating, 0);
   const average = sum / length;
   product.ratings = average;
-  await product.save();
+  // await product.save();
 
   res.status(200).json({
     message: "Review updated successfully",
@@ -86,6 +88,18 @@ exports.getAllReviews = catchAsyncError(async (req, res, next) => {
   res.status(200).json({
     success: true,
     productReview,
+  });
+});
+
+exports.get_product_review = catchAsyncError(async (req, res, next) => {
+  const { id } = req.params;
+  console.log(id);
+  const review = await reviewsSchema
+    .find({ product_uuid: id })
+    .populate([{ path: "user", model: "User" }]);
+  res.status(200).json({
+    success: true,
+    review,
   });
 });
 

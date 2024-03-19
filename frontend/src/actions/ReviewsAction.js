@@ -6,13 +6,14 @@ import {
   NEW_REVIEW_FAIL,
   NEW_REVIEW_REQUEST,
   NEW_REVIEW_SUCCESS,
+  PRODUCT_REVIEW_FAIL,
+  PRODUCT_REVIEW_REQUEST,
+  PRODUCT_REVIEW_SUCCESS,
   REVIEWS_CLEAR_ERROR,
 } from "../constants/ReviewsConstant";
 
 export const createReview =
-  (rating, comment, productId) => async (dispatch) => {
-
-    console.log(rating, comment, productId)
+  (rating, comment, productId, product_uuid, uuid) => async (dispatch) => {
     try {
       dispatch({ type: NEW_REVIEW_REQUEST });
 
@@ -20,6 +21,8 @@ export const createReview =
       formData.append("rating", rating);
       formData.append("comment", comment);
       formData.append("productId", productId);
+      formData.append("product_uuid", product_uuid);
+      formData.append("review_uuid", uuid);
 
       const config = {
         headers: {
@@ -34,7 +37,7 @@ export const createReview =
 
       dispatch({
         type: NEW_REVIEW_SUCCESS,
-        payload: data,
+        payload: data.review,
       });
     } catch (error) {
       dispatch({
@@ -51,11 +54,29 @@ export const getAllProductReview = () => async (dispatch) => {
     const { data } = await axios.get(`/api/v1/review/product-review`);
     dispatch({
       type: ALL_REVIEW_SUCCESS,
-      payload: data.productReview,
+      payload: data.review,
     });
   } catch (error) {
     dispatch({
       type: ALL_REVIEW_FAIL,
+      payload: error.response.data.message,
+    });
+  }
+};
+
+export const get_product_review_action = (id) => async (dispatch) => {
+  console.log(id)
+  try {
+    dispatch({ type: PRODUCT_REVIEW_REQUEST });
+
+    const { data } = await axios.get(`/api/v1/review/product-review/${id}`);
+    dispatch({
+      type: PRODUCT_REVIEW_SUCCESS,
+      payload: data.review,
+    });
+  } catch (error) {
+    dispatch({
+      type: PRODUCT_REVIEW_FAIL,
       payload: error.response.data.message,
     });
   }

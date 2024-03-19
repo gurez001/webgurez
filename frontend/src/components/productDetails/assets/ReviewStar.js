@@ -5,7 +5,7 @@ export const ReviewStar = ({ product }) => {
   if (!product || (!product && product.reviewsids && product.reviewsids[0])) {
     return null; // Handle the case where product or reviews are undefined
   }
-  // console.log(product.reviewsids.length)
+ 
   const starValue = [1 , 2, 3, 4, 5];
   const starInPercentage = [0, 0, 0, 0, 0];
 

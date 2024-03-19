@@ -8,12 +8,9 @@ import {
   adminProductreducer,
   createProductReducer,
   featureProductReducer,
-  newReviewReducer,
   productDetailsReducer,
   productReducer,
   productSearchReducer,
-  productsReviewReducer,
-  reviewsReducer,
   updateProductStatus,
 } from "./reducers/ProductReducer";
 import {
@@ -75,6 +72,7 @@ import { seoReducer } from "./reducers/SeoReducer";
 import { massterCouponReducer } from "./reducers/MasterCouponReducer";
 import { ContactReducer } from "./reducers/ContactReducer";
 import { postMetaReducer } from "./reducers/PostMetaReducer";
+import { reviewReducer } from "./reducers/ReviewsReducer";
 
 const reducer = combineReducers({
   products: productReducer,
@@ -86,7 +84,7 @@ const reducer = combineReducers({
   newOrder: newOrederReducer,
   myOrders: myOredersReducer,
   orderDetails: orderDetailsReducer,
-  review: newReviewReducer,
+  review: reviewReducer,
   newProduct: createProductReducer,
   adminProduct: adminProductreducer,
   allOrders: AllOredersReducer,
@@ -94,8 +92,6 @@ const reducer = combineReducers({
   adminUsers: allUserReducer,
   adminUserDetails: userDetailsReducer,
   adminProfile: adminProfileReducer,
-  productReviews: productsReviewReducer,
-  contReview: reviewsReducer,
   search: productSearchReducer,
   payment: paymentReducer,
   images: getAllImageReducer,

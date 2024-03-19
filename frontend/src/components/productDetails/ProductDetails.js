@@ -7,6 +7,8 @@ import {
   reviewsClearError,
   newReview,
   createReview,
+  getAllProductReview,
+  get_product_review_action,
 } from "../../actions/ReviewsAction";
 import Loader from "../layout/loader/Loader";
 import ReviewCard from "../productDetails/assets/ReviewCard";
@@ -73,7 +75,7 @@ const ProductDetails = () => {
 
   //---add to cart item
   const addToCartHandler = () => {
-    console.log(id, quentity);
+   
     dispatch(
       addItemsToCart(
         id,
@@ -127,8 +129,15 @@ const ProductDetails = () => {
   };
 
   const reviewSubmitHandler = () => {
-    dispatch(createReview(rating, comment, product && product._id));
-
+    dispatch(
+      createReview(
+        rating,
+        comment,
+        product && product._id,
+        product && product.product_uuid,
+        generateUuid()
+      )
+    );
     setOpen(false);
   };
 
@@ -142,9 +151,11 @@ const ProductDetails = () => {
 
   useMemo(() => {
     dispatch(getProductDetails(id));
+    dispatch(get_product_review_action(productUuid));
     if (productType === "Variable product") {
       dispatch(getProductPostMeta(productUuid));
     }
+
   }, [dispatch, id, productUuid && productUuid, productType && productType]);
 
   useEffect(() => {
@@ -161,6 +172,7 @@ const ProductDetails = () => {
       alert.success("Review add successfully submited");
       dispatch({ type: NEW_REVIEW_RESET });
     }
+
   }, [dispatch, error, alert, success, reverror]);
 
   return (
@@ -170,133 +182,137 @@ const ProductDetails = () => {
       ) : (
         <>
           <div className="product-page">
-          <section className="section-cont prod-details-page">
-            <div className="product-cont">
-              <div className="product-single">
-                <div className="product-main">
-                  <div className="product-main-left">
-                    <div className="product-gallery">
-                      <div className="main-product-gallery">
-                        <div className="main-product-gallery-left">
-                          <ImageLightbox
-                            images={product && product.product_images}
-                            imgSlideFun={imgSlideFun}
-                          />
-                        </div>
-                        <div className="main-product-gallery-right">
-                          <ImageSlider
-                            product={product && product}
-                            imgIndex={imgIndex}
-                            imgSlideFun={imgSlideFun}
-                            variantPriceValue={variantPriceValue}
-                          />
+            <section className="section-cont prod-details-page">
+              <div className="product-cont">
+                <div className="product-single">
+                  <div className="product-main">
+                    <div className="product-main-left">
+                      <div className="product-gallery">
+                        <div className="main-product-gallery">
+                          <div className="main-product-gallery-left">
+                            <ImageLightbox
+                              images={product && product.product_images}
+                              imgSlideFun={imgSlideFun}
+                            />
+                          </div>
+                          <div className="main-product-gallery-right">
+                            <ImageSlider
+                              product={product && product}
+                              imgIndex={imgIndex}
+                              imgSlideFun={imgSlideFun}
+                              variantPriceValue={variantPriceValue}
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="product-main-right">
-                    <div className="product-details">
-                      <Details
-                        product={product && product}
-                        setVariantPriceValue={setVariantPriceValue}
-                        variantPriceValue={variantPriceValue}
-                        setLabel={setLabel}
+                    <div className="product-main-right">
+                      <div className="product-details">
+                        <Details
+                          product={product && product}
+                          setVariantPriceValue={setVariantPriceValue}
+                          variantPriceValue={variantPriceValue}
+                          setLabel={setLabel}
+                        />
+                        <div className="product-purchase">
+                          <AddQuantitBtns
+                            decreaseQuantity={decreaseQuantity}
+                            quentity={quentity}
+                            increaseQuantity={increaseQuantity}
+                          />
+                          <AddToCartBtn
+                            product={product}
+                            addToCartHandler={addToCartHandler}
+                          />
+                        </div>
+                        <div className="prod-wish">
+                          <Button onClick={buyHandler}>Buy Now</Button>
+                        </div>
+                      </div>
+                      <AddReview
+                        addToWishtHandler={addToWishtHandler}
+                        submitReviewToggle={submitReviewToggle}
+                        open={open}
+                        setRating={setRating}
+                        rating={rating}
+                        comment={comment}
+                        setComment={setComment}
+                        reviewSubmitHandler={reviewSubmitHandler}
                       />
-                      <div className="product-purchase">
-                        <AddQuantitBtns
-                          decreaseQuantity={decreaseQuantity}
-                          quentity={quentity}
-                          increaseQuantity={increaseQuantity}
-                        />
-                        <AddToCartBtn
-                          product={product}
-                          addToCartHandler={addToCartHandler}
-                        />
-                      </div>
-                      <div className="prod-wish">
-                        <Button onClick={buyHandler}>Buy Now</Button>
-                      </div>
                     </div>
-                    <AddReview
-                      addToWishtHandler={addToWishtHandler}
-                      submitReviewToggle={submitReviewToggle}
-                      open={open}
-                      setRating={setRating}
-                      rating={rating}
-                      comment={comment}
-                      setComment={setComment}
-                      reviewSubmitHandler={reviewSubmitHandler}
-                    />
                   </div>
                 </div>
               </div>
-            </div>
-          </section>
-          <div className="product-review-main">
-            <div className="product-des-and-rate">
-              <div className="product-des-and-rate-tab">
-                <ul>
-                  <li
-                    className={showContent ? "prod-active-class" : null}
-                    onClick={() => setShowContent(true)}
-                  >
-                    Description
-                  </li>
-                  <li
-                    className={!showContent ? "prod-active-class" : null}
-                    onClick={() => setShowContent(false)}
-                  >
-                    Reviews (
-                    {product && product.reviewsids && product.reviewsids.length}
-                    )
-                  </li>
-                </ul>
-              </div>
-              <div className={showContent ? "prod-des-show" : "prod-des-hide"}>
-                <SinglePageArticle product={product} />
-              </div>
-              <div
-                className={
-                  !showContent
-                    ? "prod-des-show -review-area"
-                    : "prod-des-hide -review-area"
-                }
-              >
-                <h2>REVIEWS</h2>
+            </section>
+            <div className="product-review-main">
+              <div className="product-des-and-rate">
+                <div className="product-des-and-rate-tab">
+                  <ul>
+                    <li
+                      className={showContent ? "prod-active-class" : null}
+                      onClick={() => setShowContent(true)}
+                    >
+                      Description
+                    </li>
+                    <li
+                      className={!showContent ? "prod-active-class" : null}
+                      onClick={() => setShowContent(false)}
+                    >
+                      Reviews (
+                      {product &&
+                        product.reviewsids &&
+                        product.reviewsids.length}
+                      )
+                    </li>
+                  </ul>
+                </div>
+                <div
+                  className={showContent ? "prod-des-show" : "prod-des-hide"}
+                >
+                  <SinglePageArticle product={product} />
+                </div>
+                <div
+                  className={
+                    !showContent
+                      ? "prod-des-show -review-area"
+                      : "prod-des-hide -review-area"
+                  }
+                >
+                  <h2>REVIEWS</h2>
 
-                <div className="review-cont">
-                  <ReviewStar product={product} />
+                  <div className="review-cont">
+                    <ReviewStar product={product} />
 
-                  <div className="rev-col">
-                    {product &&
-                    product.reviewsids &&
-                    product.reviewsids.length > 0 ? (
-                      <>
-                        <div className="review-row">
-                          {product.reviewsids.map((review, i) => {
-                            return (
-                              <ReviewCard
-                                key={i}
-                                review={review}
-                                length={
-                                  product &&
-                                  product.reviewsids &&
-                                  product.reviewsids.length
-                                }
-                              />
-                            );
-                          })}
-                        </div>
-                      </>
-                    ) : (
-                      <p className="noReview">NO Reviews yest</p>
-                    )}
+                    <div className="rev-col">
+                      {product &&
+                      product.reviewsids &&
+                      product.reviewsids.length > 0 ? (
+                        <>
+                          <div className="review-row">
+                            {product.reviewsids.map((review, i) => {
+                              return (
+                                <ReviewCard
+                                  key={i}
+                                  review={review}
+                                  length={
+                                    product &&
+                                    product.reviewsids &&
+                                    product.reviewsids.length
+                                  }
+                                />
+                              );
+                            })}
+                          </div>
+                        </>
+                      ) : (
+                        <p className="noReview">NO Reviews yest</p>
+                      )}
+                    </div>
                   </div>
                 </div>
+                <RelatedProducts product={product} />
               </div>
-              <RelatedProducts product={product} />
             </div>
-          </div>
           </div>
         </>
       )}

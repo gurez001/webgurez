@@ -8,23 +8,43 @@ import {
   NEW_REVIEW_REQUEST,
   NEW_REVIEW_RESET,
   NEW_REVIEW_SUCCESS,
+  PRODUCT_REVIEW_FAIL,
+  PRODUCT_REVIEW_REQUEST,
+  PRODUCT_REVIEW_SUCCESS,
   REVIEWS_CLEAR_ERROR,
 } from "../constants/ReviewsConstant";
 
-export const newReviewReducer = (state = {}, action) => {
+export const reviewReducer = (state = { review: [] }, action) => {
   switch (action.type) {
+    case ALL_REVIEW_REQUEST:
     case NEW_REVIEW_REQUEST:
+    case PRODUCT_REVIEW_REQUEST:
       return {
         ...state,
         loding: true,
+      };
+    case ALL_REVIEW_SUCCESS:
+      return {
+        ...state,
+        loding: false,
+        review: action.payload,
+      };
+    case PRODUCT_REVIEW_SUCCESS:
+      return {
+        ...state,
+        loding: false,
+        review: action.payload,
       };
     case NEW_REVIEW_SUCCESS:
       return {
         ...state,
         loding: false,
-        success: action.payload,
+        success: true,
+        review: action.payload,
       };
+    case ALL_REVIEW_FAIL:
     case NEW_REVIEW_FAIL:
+    case PRODUCT_REVIEW_FAIL:
       return {
         ...state,
         loding: false,
@@ -38,38 +58,10 @@ export const newReviewReducer = (state = {}, action) => {
         success: null,
       };
 
-    case ALL_PRODUCT_ERRORS:
-      return {
-        ...state,
-        error: null,
-      };
-
-    default:
-      return state;
-  }
-};
-
-export const productsReviewReducer = (state = { review: [] }, action) => {
-  switch (action.type) {
-    case ALL_REVIEW_REQUEST:
-      return {
-        ...state,
-        loding: true,
-      };
-    case ALL_REVIEW_SUCCESS:
-      return {
-        loding: false,
-        review: action.payload,
-      };
-    case ALL_REVIEW_FAIL:
-      return {
-        ...state,
-        loding: false,
-        error: action.payload,
-      };
     case REVIEWS_CLEAR_ERROR:
       return {
         ...state,
+        loding: false,
         error: null,
       };
 
@@ -77,6 +69,35 @@ export const productsReviewReducer = (state = { review: [] }, action) => {
       return state;
   }
 };
+
+// export const productsReviewReducer = (state = { review: [] }, action) => {
+//   switch (action.type) {
+//     case ALL_REVIEW_REQUEST:
+//       return {
+//         ...state,
+//         loding: true,
+//       };
+//     case ALL_REVIEW_SUCCESS:
+//       return {
+//         loding: false,
+//         review: action.payload,
+//       };
+//     case ALL_REVIEW_FAIL:
+//       return {
+//         ...state,
+//         loding: false,
+//         error: action.payload,
+//       };
+//     case REVIEWS_CLEAR_ERROR:
+//       return {
+//         ...state,
+//         error: null,
+//       };
+
+//     default:
+//       return state;
+//   }
+// };
 
 // export const reviewsReducer = (state = {}, action) => {
 //   switch (action.type) {

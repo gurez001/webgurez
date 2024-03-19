@@ -5,7 +5,7 @@ import { getCategorie } from "../../../actions/ProductAction";
 import Loader from "../../layout/loader/Loader";
 
 const RelatedProducts = ({ product }) => {
-  console.log(product);
+  
   const dispatch = useDispatch();
   const { loding, products } = useSelector((state) => state.catProducts);
   const [currentPage, setCurrentPage] = useState(1);
