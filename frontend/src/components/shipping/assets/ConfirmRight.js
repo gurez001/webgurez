@@ -56,7 +56,8 @@ export const ConfirmRight = ({ cartItem, shippingInfo }) => {
     dispatch(
       verifyMasterCoupon(
         CouponinputValue ? CouponinputValue : {},
-        ids ? ids : []
+        ids ? ids : [],
+        subtotal
       )
     );
     setShoeMsg(false);

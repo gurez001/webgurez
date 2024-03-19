@@ -74,23 +74,60 @@ exports.getAllMasterCoupon = catchAsyncError(async (req, res, next) => {
 });
 
 exports.verifyMasterCoupon = catchAsyncError(async (req, res, next) => {
-  const { coupon, ids } = req.body;
+  const { coupon, ids, subtotal } = req.body;
+  const amount = Number(subtotal);
+
   let data;
   const couponData = await MasrterCouponModel.findOne({
     master_coupon_code: coupon,
   });
 
   if (!couponData) {
-    data=null;
+    data = null;
     return next(new ErrorHandler("Invalid coupon.", 404));
   }
+  if (
+    couponData.master_coupon_min_spend !== 0 &&
+    couponData.master_coupon_max_spend !== 0
+  ) {
+    const valid_min_max_amount = isMinAmount(couponData, amount);
+    if (!valid_min_max_amount) {
+      return next(
+        new ErrorHandler(
+          `Purchase range should be ${couponData.master_coupon_min_spend} to ${couponData.master_coupon_max_spend}`,
+          404
+        )
+      );
+    }
+  } else {
+    if (couponData.master_coupon_min_spend === 0) {
+      const valid_max_amount = isMaxAmount(couponData, amount);
+      if (!valid_max_amount) {
+        return next(
+          new ErrorHandler(
+            `Purchase amount should be lower than ${couponData.master_coupon_max_spend}`,
+            404
+          )
+        );
+      }
+    }
 
+    const valid_min_amount = isMinMaxAmount(couponData, amount);
+    if (!valid_min_amount) {
+      return next(
+        new ErrorHandler(
+          `Purchase amount should be greater than ${couponData.master_coupon_min_spend}`,
+          404
+        )
+      );
+    }
+  }
   const valid_date = isWithinDateRange(couponData);
   if (!valid_date) {
-    data=null;
+    data = null;
     return next(new ErrorHandler("Coupon has been expired.", 404));
   }
-  
+
   if (couponData.master_coupon_type === "Percentage discount") {
     data = applyCartPercentageDiscount("percentage", couponData);
   } else if (couponData.master_coupon_type === "Fixed basket discount") {
@@ -103,12 +140,27 @@ exports.verifyMasterCoupon = catchAsyncError(async (req, res, next) => {
   });
 });
 
+function isMinMaxAmount(coupon, amount) {
+  const max_amount = coupon.master_coupon_max_spend;
+  const min_amount = coupon.master_coupon_min_spend;
+  if (amount < max_amount && amount > min_amount) return true;
+}
+
+function isMaxAmount(coupon, amount) {
+  const max_amount = coupon.master_coupon_max_spend;
+  if (amount < max_amount) return true;
+}
+
+function isMinAmount(coupon, amount) {
+  const min_amount = coupon.master_coupon_min_spend;
+  if (amount > min_amount) return true;
+}
+
 function isWithinDateRange(coupon) {
   const date = Date.now();
   const current_date = new Date(date);
   const start_date = coupon.master_coupon_start_date;
   const end_date = coupon.master_coupon_end_date;
-
   if (end_date !== null) {
     if (start_date < current_date && current_date < end_date) {
       return true;
@@ -142,226 +194,3 @@ function applyCartFixedBasketDiscount(type, coupon) {
   };
   return coupondata;
 }
-
-// exports.verifyMasterCoupon = catchAsyncError(async (req, res, next) => {
-//   const { coupon, ids } = req.body;
-//   const stringArray = [ids];
-//   const numbersArray = stringArray[0]
-//     .split(",")
-//     .map((str) => parseInt(str, 10));
-//   // let c = isExist.master_coupon_products[0]
-//   //   .split(",")
-//   //   .map((str) => parseInt(str, 10));
-
-//   const data = await applyCoupon(coupon, stringArray);
-
-//   async function applyCoupon(coupon, numbersArray, user) {
-//     if (await isValidCoupon(coupon)) {
-//       const current = Date.now();
-//       const currentDate = new Date(current);
-
-//       if (await isWithinDateRange(currentDate, coupon)) {
-//         const couponData = await MasrterCouponModel.findOne({
-//           master_coupon_code: coupon,
-//         });
-//         const Orders = await orderModels.find({ coupon });
-//         const limit = 500;
-//         if (
-//           await isBelowUsageLimit(
-//             couponData.master_coupon_total_usage_limit,
-//             // Orders.length
-//             limit
-//           )
-//         ) {
-//           const couponData = await MasrterCouponModel.findOne({
-//             master_coupon_code: coupon,
-//           });
-
-//           // Apply discount based on coupon type
-//           if (couponData.master_coupon_type === "Percentage discount") {
-//             return applyCartPercentageDiscount(
-//               "percentage",
-//               couponData.master_coupon_name,
-//               couponData.master_coupon_amount,
-//               couponData.master_coupon_uuid
-//             );
-//           } else if (
-//             couponData.master_coupon_type === "Fixed basket discount"
-//           ) {
-//             return applyCartFixedBasketDiscount(
-//               "fix items",
-//               couponData.master_coupon_name,
-//               couponData.master_coupon_amount,
-//               couponData.master_coupon_uuid
-//             );
-//           } else if (
-//             couponData.master_coupon_type === "Fixed product discount"
-//           ) {
-//             return applyFixedProductDiscount(
-//               "fix product",
-//               couponData.master_coupon_name,
-//               couponData.master_coupon_amount,
-//               couponData.master_coupon_products,
-//               couponData.master_coupon_uuid
-//             );
-//           } else if (couponData.master_coupon_type === "Discount By User") {
-//             return applyDiscountByUser("user", couponData.master_coupon_amount);
-//           }
-//         }
-//       } else {
-//         return "Coupon is not valid within the date range.";
-//       }
-//     } else {
-//       return "Invalid coupon.";
-//     }
-//   }
-
-//   async function isValidCoupon(coupon) {
-//     const isExist = await MasrterCouponModel.findOne({
-//       master_coupon_code: coupon,
-//     });
-//     return isExist;
-//   }
-
-//   async function isWithinDateRange(date, coupon) {
-//     const isExist = await MasrterCouponModel.findOne({
-//       master_coupon_code: coupon,
-//     });
-
-//     const start = isExist.master_coupon_start_date;
-//     const end = isExist.master_coupon_end_date;
-
-//     if (start < date && date < end) {
-//       return isExist;
-//     } else {
-//       return "Coupon has benn expire.";
-//     }
-//   }
-
-//   async function isBelowUsageLimit(limit, couponLength) {
-//     if (couponLength < limit) {
-//       return true;
-//     } else {
-//       return "This coupon expire";
-//     }
-//   }
-
-//   async function applyCartPercentageDiscount(type, name, discountAmount, uuid) {
-//     coupondata = {
-//       type: type,
-//       name: name,
-//       disscount: discountAmount,
-//       uuid,
-//       productid: null,
-//       message: "Coupon applied successfully!",
-//     };
-//     return coupondata;
-//   }
-
-//   async function applyCartFixedBasketDiscount(
-//     type,
-//     name,
-//     discountAmount,
-//     uuid
-//   ) {
-//     coupondata = {
-//       type: type,
-//       name: name,
-//       uuid,
-//       disscount: discountAmount,
-//       productid: null,
-//       message: "Coupon applied successfully!",
-//     };
-//     return coupondata;
-//   }
-
-//   async function applyFixedProductDiscount(
-//     type,
-//     name,
-//     discountAmount,
-//     numbersArray,
-//     uuid
-//   ) {
-//     coupondata = {
-//       type: type,
-//       name: name,
-//       disscount: discountAmount,
-//       uuid,
-//       productid: numbersArray ? numbersArray : null,
-//       message: "Coupon applied successfully!",
-//     };
-//     return coupondata;
-//   }
-//   async function applyDiscountByUser(type, discountAmount) {
-//     coupondata = {
-//       type: type,
-//       // name: discountAmount,
-//       disscount: discountAmount,
-//       productid: null,
-//       message: "Coupon applied successfully!",
-//     };
-//     return coupondata;
-//   }
-//   res.status(200).json({
-//     success: true,
-//     coupon: data,
-//   });
-// });
-
-// exports.deleteBlogCategore = catchAsyncError(async (req, res, next) => {
-//
-//     const { id } = req.params;
-
-//     if (!mongoose.Types.ObjectId.isValid(id)) {
-//       return next(new ErrorHandler("Invalid ID format", 400));
-//     }
-
-//     const existingPost = await MasrterCoupon.findById(id);
-
-//     if (!existingPost) {
-//       return next(new ErrorHandler("Post not found", 404));
-//     }
-
-//     await existingPost.deleteOne();
-//     res.status(200).json({
-//       success: true,
-//       message: "post has been deleted",
-//     });
-//   } catch (err) {
-//     return next(new ErrorHandler(`Internal server error: ${err}`, 500));
-//   }
-// });
-
-// exports.updateBlogCategore = catchAsyncError(async (req, res, next) => {
-//
-//     const { name, slug, title, description } = req.body;
-//     let metaLink = slug.split(" ").join("-").toLowerCase();
-//     const user = req.user._id;
-//     const { id } = req.params;
-
-//     const data = {
-//       name,
-//       slug: metaLink,
-//       title,
-//       description,
-//       user,
-//     };
-
-//     if (!mongoose.Types.ObjectId.isValid(id)) {
-//       return next(new ErrorHandler("Invalid ID format", 400));
-//     }
-
-//     const updatedCategory = await MasrterCoupon.findByIdAndUpdate(id, data, {
-//       new: true,
-//       runValidators: true,
-//       useFindAndModify: false,
-//     });
-
-//     res.status(200).json({
-//       success: true,
-//       updatedCategory,
-//     });
-//   } catch (err) {
-//     return next(new ErrorHandler(`Internal server error: ${err}`, 500));
-//   }
-// });

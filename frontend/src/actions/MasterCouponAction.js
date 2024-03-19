@@ -79,7 +79,7 @@ export const CreateMasterCoupon =
     }
   };
 
-export const verifyMasterCoupon = (coupon, ids) => async (dispatch) => {
+export const verifyMasterCoupon = (coupon, ids,subtotal) => async (dispatch) => {
   try {
     dispatch({ type: VERIFY_MASTER_COUPON_REQUEST });
 
@@ -87,6 +87,7 @@ export const verifyMasterCoupon = (coupon, ids) => async (dispatch) => {
 
     formData.append("coupon", coupon);
     formData.append("ids", ids);
+    formData.append("subtotal", subtotal);
 
     const config = {
       headers: {
