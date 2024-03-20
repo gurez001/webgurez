@@ -3,63 +3,21 @@ const CountModel = require("./CountModel");
 
 const productSchema = new mongoose.Schema({
   _id: Number,
-  // name: {
-  //   type: String,
 
-  //   trim: true,
-  // },
   slug: {
     type: String,
   },
-  // description: {
-  //   type: String,
-  // },
-  // article: {
-  //   type: String,
-  // },
   price: {
     type: Number,
   },
-  // maxprice: {
-  //   type: Number,
-  // },
-  ratings: {
+  product_ratings_average:{
     type: Number,
     default: 0,
   },
-  // imageId: [{ type: mongoose.Schema.Types.ObjectId, ref: "Images" }],
-
-  // category: [
-  //   {
-  //     type: mongoose.Schema.Types.ObjectId,
-  //     ref: "Categore",
-  //   },
-  // ],
-  // subcategory: [
-  //   {
-  //     type: mongoose.Schema.Types.ObjectId,
-  //     ref: "SubCategore",
-  //   },
-  // ],
-  // stock: {
-  //   type: Number,
-
-  //   default: 1,
-  // },
-  numOfReviews: {
-    type: Number,
-    default: 0,
-  },
-  // seoid: {
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   ref: "SEO",
-  // },
   productstatus: {
     type: String,
     default: "Active",
   },
-  reviewsids: [{ type: mongoose.Schema.Types.ObjectId, ref: "reviewsSchema" }],
-
   user: {
     type: Number,
     ref: "User",
@@ -92,7 +50,7 @@ const productSchema = new mongoose.Schema({
   product_sale_price: {
     type: Number,
   },
-  Default_value:{
+  Default_value: {
     type: String,
   },
   product_ratings: {

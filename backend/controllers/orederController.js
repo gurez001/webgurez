@@ -367,6 +367,7 @@ exports.deleteOrders = catchAsyncError(async (req, res, next) => {
 exports.shipping_info = catchAsyncError(async (req, res, next) => {
   const { id } = req.params;
   const user = req.user._id;
+  
   let shipping =
     id === "0"
       ? await orderShippingInfoModel.findOne({ user })

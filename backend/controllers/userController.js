@@ -15,9 +15,9 @@ exports.singupUser = catchAsyncError(async (req, res, next) => {
   const { email } = req.body;
   const isExist = await user.findOne({ email });
 
-  if (isExist) {
-    return next(new ErrorHandler("Email is alredy ragisterd ", 404));
-  }
+  // if (isExist) {
+  //   return next(new ErrorHandler("Email is alredy ragisterd ", 404));
+  // }
 
   const otp = generateOtp();
   await sendOtpMail(otp);

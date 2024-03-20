@@ -1,9 +1,9 @@
 import React from "react";
 import { StarComponent } from "./StarComponent";
 import TimeAndDate from "../../layout/time/TimeAndDate";
+import { server_url } from "../../../utils/Url";
 
 const ReviewCard = ({ review, length }) => {
-
   return (
     <>
       <div className="review-card">
@@ -12,7 +12,7 @@ const ReviewCard = ({ review, length }) => {
           <img
             src={
               review.user
-                ? `http://localhost:8000/${
+                ? `${server_url()}${
                     review.user && review.user.avatar && review.user.avatar.url
                   }`
                 : "/icon.png"

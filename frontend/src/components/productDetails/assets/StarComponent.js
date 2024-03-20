@@ -6,7 +6,7 @@ export const StarComponent = ({ review }) => {
     <>
       <Rating
         value={parseFloat(review)}
-        precision={0.25}
+        precision={0.5}
         size={"large"}
         readOnly={true}
         name="sdfg"

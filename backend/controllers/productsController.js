@@ -251,14 +251,6 @@ exports.getSingleProduct = catchAsyncError(async (req, res, next) => {
         { path: "product_category", model: "Categore" },
         { path: "product_subcategory", model: "SubCategore" },
         { path: "product_images", model: "Images" },
-        {
-          path: "reviewsids",
-          model: "reviewsSchema",
-          populate: {
-            path: "user",
-            model: "User",
-          },
-        },
       ]);
   } else {
     Product = await products.findById(req.params.metalink).populate([
@@ -278,9 +270,7 @@ exports.getSingleProduct = catchAsyncError(async (req, res, next) => {
     //  Product = await Product.findById(req.params.metalink).populate('imageId');
   }
 
-  if (!Product) {
-    return next(new ErrorHandler("Product not found", 404));
-  }
+
   res.status(200).json({
     success: true,
     Product,

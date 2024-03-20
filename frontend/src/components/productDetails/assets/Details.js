@@ -12,7 +12,7 @@ const Details = ({
   setLabel,
 }) => {
   const { loading, postmeta } = useSelector((state) => state.postMeta);
-  const [label_toggle,set_label_toggle]= useState(true)
+  const [label_toggle, set_label_toggle] = useState(true);
   //review lenght
   const reviewLength =
     product && product.reviewsids && product.reviewsids.length;
@@ -80,7 +80,8 @@ const Details = ({
                 {product &&
                   product.product_category &&
                   product.product_category &&
-                  product.product_category[0] &&  product.product_category[0].name}
+                  product.product_category[0] &&
+                  product.product_category[0].name}
               </NavLink>
             </li>
             <li>
@@ -160,13 +161,13 @@ const Details = ({
           </p>
         </div>
         <div className="ratings">
-          <StarComponent review={average} />
+          <StarComponent review={product && product.product_ratings_average} />
           <div className="numOfReviews">
-            (
             <span>
-              {product && product.reviewsids && product.reviewsids.length}
+              {product && product.product_ratings
+                ? `(${product.product_ratings})`
+                : "(Reviews)"}
             </span>
-            <span>Reviews</span> )
           </div>
         </div>
         <div className="short-description">
@@ -190,7 +191,13 @@ const Details = ({
           <div className="variations">
             <div className="label">
               <label>{postmeta && postmeta.meta_key}</label>
-              <select onClick={(e) => { setLabel(e.target.value); set_label_toggle(false); }} onChange={(e) => setLabelValue(e.target.value)}>
+              <select
+                onClick={(e) => {
+                  setLabel(e.target.value);
+                  set_label_toggle(false);
+                }}
+                onChange={(e) => setLabelValue(e.target.value)}
+              >
                 <option value={""}>Choose one</option>
                 {postmeta &&
                   postmeta.meta_value &&
@@ -204,12 +211,12 @@ const Details = ({
                         return key === productValue;
                       }
                     );
-                    
-                   if(i === selectedIndex && label_toggle ){
-                    setLabel(key)
-                   }
+
+                    if (i === selectedIndex && label_toggle) {
+                      setLabel(key);
+                    }
                     return (
-                      <option  key={i} selected={i === selectedIndex}>
+                      <option key={i} selected={i === selectedIndex}>
                         {key}
                       </option>
                     );

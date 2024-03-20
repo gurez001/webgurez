@@ -47,7 +47,12 @@ const ProductDetails = () => {
     (state) => state.productDetails
   );
   const [showContent, setShowContent] = useState(true);
-  const { success, review,error: reverror } = useSelector((state) => state.review);
+  const {
+    success,
+    review,
+    review_length,
+    error: reverror,review_average
+  } = useSelector((state) => state.review);
   let defaultPrice = product && product.product_sale_price;
   const [variantPriceValue, setVariantPriceValue] = useState([]);
   // //--------------- useSelector ----------------------------
@@ -259,11 +264,7 @@ const ProductDetails = () => {
                       className={!showContent ? "prod-active-class" : null}
                       onClick={() => setShowContent(false)}
                     >
-                      Reviews (
-                      {product &&
-                        product.reviewsids &&
-                        product.reviewsids.length}
-                      )
+                      Reviews ({review_length && review_length})
                     </li>
                   </ul>
                 </div>
@@ -282,24 +283,26 @@ const ProductDetails = () => {
                   <h2>REVIEWS</h2>
 
                   <div className="review-cont">
-                    <ReviewStar product={product} />
+                    <ReviewStar
+                      review={review}
+                      review_length={review_length}
+                      review_average={review_average}
+                    />
 
                     <div className="rev-col">
-                      {review.length > 0 ? (
+                      {review && review.length > 0 ? (
                         <>
                           <div className="review-row">
-                            {review &&  review.map((item, i) => {
-                              return (
-                                <ReviewCard
-                                  key={i}
-                                  review={item}
-                                  length={
-                                    review &&
-                                    review.length
-                                  }
-                                />
-                              );
-                            })}
+                            {review &&
+                              review.map((item, i) => {
+                                return (
+                                  <ReviewCard
+                                    key={i}
+                                    review={item}
+                                    length={review && review.length}
+                                  />
+                                );
+                              })}
                           </div>
                         </>
                       ) : (

@@ -30,6 +30,18 @@ const reviewsSchema = new mongoose.Schema({
     type: String,
     default: null,
   },
+  review_modified_date: {
+    type: Date,
+    default: null,
+  },
+  review_status: {
+    type: String,
+    default: "Active",
+  },
+  review_is_deleted: {
+    type: String,
+    default: "No",
+  },
   createdate: {
     type: Date,
     default: Date.now,

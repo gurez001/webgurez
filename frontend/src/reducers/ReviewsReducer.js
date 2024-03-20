@@ -33,14 +33,16 @@ export const reviewReducer = (state = { review: [] }, action) => {
       return {
         ...state,
         loding: false,
-        review: action.payload,
+        review: action.payload.review,
+        review_length: action.payload.reviewLength,
+        review_average: action.payload.review_average,
       };
     case NEW_REVIEW_SUCCESS:
       return {
         ...state,
         loding: false,
         success: true,
-        review: action.payload,
+        review: action.payload.review,
       };
     case ALL_REVIEW_FAIL:
     case NEW_REVIEW_FAIL:

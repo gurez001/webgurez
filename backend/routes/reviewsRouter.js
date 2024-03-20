@@ -14,6 +14,6 @@ router
   .put(isAuthenticatedUser, createProductReviews);
 
 router.route("/review/product-review").get(getAllReviews);
-router.route("/review/product-review/:id").get(get_product_review);
+router.route("/review/single/product-review").get(get_product_review);
 
 module.exports = router;

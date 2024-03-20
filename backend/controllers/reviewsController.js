@@ -8,6 +8,7 @@ const {
 const catchAsyncError = require("../middleware/catchAsyncError");
 const CountModel = require("../models/CountModel");
 const productModels = require("../models/productModels");
+const ApiFetures = require("../utils/apiFeatuers");
 
 //--------create new review and update the reviews
 
@@ -15,7 +16,9 @@ exports.createProductReviews = catchAsyncError(async (req, res, next) => {
   const { rating, comment, productId, product_uuid, review_uuid } = req.body;
 
   const user = req.user;
-  const product = await productModels.findById(productId);
+  const product = await productModels.findOne({
+    product_uuid,
+  });
 
   const reviews = {
     user: user._id,
@@ -34,11 +37,6 @@ exports.createProductReviews = catchAsyncError(async (req, res, next) => {
   if (!isExistReview) {
     const newReview = await reviewsSchema.create(reviews);
 
-    if (product) {
-      product.reviewsids.push(newReview._id);
-      await product.save();
-    }
-
     let revilength = await reviewsSchema.find({
       product_uuid,
     });
@@ -46,7 +44,8 @@ exports.createProductReviews = catchAsyncError(async (req, res, next) => {
     const length = revilength.length;
     const sum = revilength.reduce((acc, review) => acc + review.rating, 0);
     const average = sum / length;
-    product.ratings = average;
+    product.product_ratings = length;
+    product.product_ratings_average = average;
     await product.save();
     res.status(201).json({
       message: "Review created successfully",
@@ -57,6 +56,7 @@ exports.createProductReviews = catchAsyncError(async (req, res, next) => {
 
   isExistReview.rating = rating;
   isExistReview.comment = comment;
+  isExistReview.review_modified_date = new Date();
   await isExistReview.save();
 
   let revilength = await reviewsSchema.find({
@@ -65,8 +65,10 @@ exports.createProductReviews = catchAsyncError(async (req, res, next) => {
   const length = revilength.length;
   const sum = revilength.reduce((acc, review) => acc + review.rating, 0);
   const average = sum / length;
-  product.ratings = average;
-  // await product.save();
+  console.log(average)
+  product.product_ratings = length;
+  product.product_ratings_average = average.toFixed(2);
+  await product.save();
 
   res.status(200).json({
     message: "Review updated successfully",
@@ -92,15 +94,28 @@ exports.getAllReviews = catchAsyncError(async (req, res, next) => {
 });
 
 exports.get_product_review = catchAsyncError(async (req, res, next) => {
-  const { id } = req.params;
-console.log(id)
-  const review = await reviewsSchema
-    .find({product_uuid:id})
-    .populate([{ path: "user", model: "User" }]);
-    console.log(review);
+  const resultPerpage = 3;
+  const reviewLength = await reviewsSchema.find({
+    product_uuid: req.query.product_uuid,
+  });
+  const apiFetures = new ApiFetures(reviewsSchema.find(), req.query)
+    .search()
+    .filter()
+    .pagination(resultPerpage);
+
+  const review = await apiFetures.query.populate([
+    { path: "user", model: "User" },
+  ]);
+
+  const sum = reviewLength.reduce((acc, review) => acc + review.rating, 0);
+  const length = reviewLength.length;
+  const average = sum / length;
+
   res.status(200).json({
     success: true,
     review,
+    reviewLength: length,
+    review_average: average.toFixed(2),
   });
 });
 

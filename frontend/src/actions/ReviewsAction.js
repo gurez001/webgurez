@@ -34,10 +34,10 @@ export const createReview =
         formData,
         config
       );
-
+      console.log(data);
       dispatch({
         type: NEW_REVIEW_SUCCESS,
-        payload: data.review,
+        payload: data,
       });
     } catch (error) {
       dispatch({
@@ -64,26 +64,28 @@ export const getAllProductReview = () => async (dispatch) => {
   }
 };
 
-export const get_product_review_action = (id) => async (dispatch) => {
-  
-  try {
-    dispatch({ type: PRODUCT_REVIEW_REQUEST });
+export const get_product_review_action =
+  ( id) =>
+  async (dispatch) => {
+    const  currentPage = 1
+    try {
+      dispatch({ type: PRODUCT_REVIEW_REQUEST });
 
-    const { data } = await axios.get(`/api/v1/review/product-review/${id}`);
-    console.log(id)
-    console.log('call')
-    console.log(data)
-    dispatch({
-      type: PRODUCT_REVIEW_SUCCESS,
-      payload: data.review,
-    });
-  } catch (error) {
-    dispatch({
-      type: PRODUCT_REVIEW_FAIL,
-      payload: error.response.data.message,
-    });
-  }
-};
+      const { data } = await axios.get(
+        `/api/v1/review/single/product-review?page=${currentPage}&product_uuid=${id}`
+      );
+        console.log(data);
+      dispatch({
+        type: PRODUCT_REVIEW_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: PRODUCT_REVIEW_FAIL,
+        payload: error.response.data.message,
+      });
+    }
+  };
 
 // export const deleteReviews = (reviewId, productId) => async (dispatch) => {
 //   try {

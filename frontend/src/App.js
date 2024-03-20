@@ -12,7 +12,7 @@ import Shop from "./components/shop/Shop";
 import ProductDetails from "./components/productDetails/ProductDetails";
 import LoginSingup from "./components/user/LoginSingup";
 import { useEffect, useState } from "react";
-import store from "./store"; 
+import store from "./store";
 import { LoadUser } from "./actions/UserAction";
 import Loader from "./components/layout/loader/Loader";
 import { useSelector } from "react-redux";
@@ -108,7 +108,10 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/contact-us" element={<ContactUs />} />
                 <Route path="/shop" element={<Shop />} />
-                <Route path="/user-dashboard" element={<UserDashboard />} />
+                <Route
+                  path="/user-dashboard"
+                  element={<ProtectedRoute Component={UserDashboard} />}
+                />
                 <Route
                   path="/product-category/:category"
                   element={<Category />}
@@ -144,7 +147,7 @@ function App() {
                   path="/product/:id"
                   element={
                     // <ErrorBoundary>
-                      <ProductDetails />
+                    <ProductDetails />
                     // </ErrorBoundary>
                   }
                 />
@@ -157,7 +160,7 @@ function App() {
                 />
                 <Route path="/registration" element={<LoginSingup />} />
                 {/* <Route path="/category/:id" element={<Dolls />} /> */}
-            
+
                 <Route
                   path="/account/me/update"
                   element={<ProtectedRoute Component={UpdateProfile} />}
@@ -251,8 +254,6 @@ function App() {
                     <ProtectedRoute isAdmin={true} Component={CreateProduct} />
                   }
                 />
-
-                
 
                 <Route
                   path="/admin/product-label/:attribute/:id"

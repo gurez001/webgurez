@@ -1,30 +1,17 @@
 import React from "react";
 import { StarComponent } from "./StarComponent";
 
-export const ReviewStar = ({ product }) => {
-  if (!product || (!product && product.reviewsids && product.reviewsids[0])) {
-    return null; // Handle the case where product or reviews are undefined
-  }
- 
-  const starValue = [1 , 2, 3, 4, 5];
+export const ReviewStar = ({ review, review_length, review_average }) => {
+  const starValue = [1, 2, 3, 4, 5];
   const starInPercentage = [0, 0, 0, 0, 0];
 
-  
-  const reviewLength =
-    product && product.reviewsids && product.reviewsids.length;
-
-  const sum =
-    product && product.reviewsids
-      ? product.reviewsids.reduce((acc, review) => acc + review.rating, 0)
-      : 0;
-
-  if (product && product.reviewsids && product.reviewsids.length > 0) {
-    product.reviewsids.forEach((review) => {
-      const rating = review.rating;
+  console.log(review);
+  review &&
+    review.forEach((item) => {
+      const rating = item.rating;
       // starValue[rating - 1] += rating;
-      starInPercentage[rating - 1] += 100 / reviewLength;
+      starInPercentage[rating - 1] += 100 / review_length;
     });
-  }
 
   return (
     <div className="rating-col">
@@ -33,15 +20,13 @@ export const ReviewStar = ({ product }) => {
           <div className="he-content">
             <div className="avg-rating-container">
               <div>
-                <h3>
-                  {product && product.reviewsids && product.reviewsids.length >0 ? (sum / reviewLength).toFixed(2) : 0}
-                </h3>
+                <h3>{review_average && review_average}</h3>
               </div>
               <div>
                 <p>Average Rating</p>
                 <div>
-                  <StarComponent review={sum / reviewLength || 0} />
-                  <div>({reviewLength} Reviews)</div>
+                  <StarComponent review={review_average && review_average} />
+                  <div>({review_length && review_length} Reviews)</div>
                 </div>
               </div>
             </div>
